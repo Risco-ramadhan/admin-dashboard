@@ -30,4 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('risco', ProfileController::class);
+
+Route::get('master', function () {
+    return '<h1>Hello admin </h1>';
+})->middleware(['auth', 'verified', 'permission:lihat-user']);
+
+
+
 require __DIR__ . '/auth.php';
