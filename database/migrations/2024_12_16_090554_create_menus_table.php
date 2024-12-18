@@ -20,8 +20,10 @@ return new class extends Migration
             $table->uuid('menu_permission')->nullable(); // UUID untuk permission yang terkait
             $table->boolean('menu_is_active')->default(true); // Status aktif atau tidak
             $table->timestamps(); // Kolom created_at dan updated_at
-            // Foreign key untuk menu_parent (opsional, jika ada hierarki menu)
-            $table->foreign('menu_parent')->references('id')->on('menus')->onDelete('cascade');
+
+            // Index untuk menu_parent tanpa foreign key constraint
+            $table->index('menu_parent');
+
             // Foreign key untuk menu_permission (opsional, jika terkait dengan permission)
             $table->foreign('menu_permission')->references('id')->on('permissions')->onDelete('set null');
         });
