@@ -1,6 +1,5 @@
 <template>
   <MainLayout>
-    <template #default>
       <div class="container mt-4">
         <p class="h2 fw-bold text-decoration-underline">Home</p>
         <div class="row g-4 pt-3">
@@ -133,7 +132,6 @@
           </nav>
         </div>
       </div>
-    </template>
   </MainLayout>
 </template>
 
