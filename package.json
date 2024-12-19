@@ -18,8 +18,6 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "devextreme": "24.2.3",
-        "devextreme-cli": "^1.7.3",
-        "devextreme-vue": "24.2.3"
+        "devextreme-cli": "^1.7.3"
     }
 }
