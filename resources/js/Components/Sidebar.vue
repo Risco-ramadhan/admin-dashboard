@@ -33,26 +33,26 @@
           <li class="nav-item">
             <DropdownLink :href="route('user')">
               <i class="bi bi-bar-chart me-2"></i>
-              <span>Site Management</span>
+              <span>User Management</span>
             </DropdownLink>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center" @click.prevent="navigateTo('/crm')">
-              <i class="bi bi-people me-2"></i>
-              <span>CRM</span>
-            </a>
+            <DropdownLink :href="route('role')">
+              <i class="bi bi-bar-chart me-2"></i>
+              <span>Role Management</span>
+            </DropdownLink>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center" @click.prevent="navigateTo('/ecommerce')">
-              <i class="bi bi-cart me-2"></i>
-              <span>ECommerce</span>
-            </a>
+            <DropdownLink :href="route('menu')">
+              <i class="bi bi-bar-chart me-2"></i>
+              <span>Menu Management</span>
+            </DropdownLink>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center" @click.prevent="navigateTo('/academy')">
+            <DropdownLink :href="route('permission.menu')">
               <i class="bi bi-book me-2"></i>
-              <span>Academy</span>
-            </a>
+              <span>Permission Menu</span>
+            </DropdownLink>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link d-flex align-items-center" @click.prevent="navigateTo('/logistics')">
@@ -90,37 +90,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.sidebar {
-  font-size: 0.9rem;
-  background-color: #fff;
-}
-
-.nav-link {
-  color: #6c757d;
-  transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #6f42c1;
-  background-color: #f3f2f7;
-  border-radius: 5px;
-}
-
-.bi {
-  font-size: 1rem;
-}
-
-.nav-item {
-  margin-bottom: 5px;
-}
-
-.nav-link span {
-  font-size: 0.9rem;
-}
-
-.nav {
-  margin-top: 10px;
-}
-</style>
