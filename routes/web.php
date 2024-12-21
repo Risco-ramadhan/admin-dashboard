@@ -1,10 +1,15 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\User\RoleController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Menu\MenuController;
+use App\Http\Controllers\Menu\PermissionController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,16 +22,26 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::get('/rumah', function () {
     return Inertia::render('Home');
 });
 
-Route::get('/user', [UserController::class, 'index'])->name('user');
+Route::get('/', [AuthenticatedSessionController::class, 'create'])
+    ->name('login');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
+    Route::get('/role', [RoleController::class, 'index'])->name('role');
+    Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.show');
+    Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
+    Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+    Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
+    Route::put('/menu/{id}/edit', [MenuController::class, 'update'])->name('menu.update');
+    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.menu');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
