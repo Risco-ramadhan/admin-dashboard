@@ -62,10 +62,10 @@
           </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
-            <a href="#" class="dropdown-item d-flex align-items-center text-danger">
+            <DropdownLink :href="route('logout')" method="post" as="button">
               <i class="bi bi-box-arrow-left me-2"></i>
-              Logout
-            </a>
+              Log Out
+            </DropdownLink>
           </li>
         </ul>
       </div>
@@ -74,27 +74,12 @@
 </template>
 
 <script>
+import DropdownLink from '@/Components/DropdownLink.vue';
 export default {
   name: "Navbar",
+  components: {
+    DropdownLink
+    },
 };
+
 </script>
-
-<style scoped>
-.navbar {
-  height: 60px;
-}
-
-.dropdown-menu {
-  width: 250px;
-  padding: 0.5rem;
-  border-radius: 10px;
-}
-
-.dropdown-item:hover {
-  background-color: #f8f9fa;
-}
-
-.text-danger {
-  color: #dc3545 !important;
-}
-</style>
