@@ -1,7 +1,6 @@
 <template>
   <MainLayout>
       <div class="container mt-4">
-        <p class="h2 fw-bold text-decoration-underline">Home</p>
         <div class="row g-4 pt-3">
           <!-- Card 1: Today's Money -->
           <div class="col-md-3">

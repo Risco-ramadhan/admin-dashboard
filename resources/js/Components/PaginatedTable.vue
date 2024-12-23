@@ -1,28 +1,34 @@
 <template>
   <div>
-    <!-- Search Input -->
-    <div class="mb-3">
-      <input
-        type="text"
-        v-model="searchTerm"
-        class="form-control"
-        placeholder="Search..."
-      />
+    <div class="row mb-3">
+      <!-- Add Button -->
+      <div class="col-md-9 text-start">
+        <button v-if="showActionAdd" class="btn btn-success" @click="addRow">
+          <i class="fas fa-user-plus"></i> Add
+        </button>
+      </div>
+      <!-- Search Input -->
+      <div class="col-md-3 text-end">
+        <input
+          type="text"
+          v-model="searchTerm"
+          class="form-control rounded-pill"
+          placeholder="Search..."
+        />
+      </div>
     </div>
+       
 
-    <!-- Tabel Data -->
-    <td v-if="showActionAdd">
-      <button class="btn btn-success" @click="addRow">Tambah</button>
-    </td>
-
+    <!-- Table -->
     <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
+      <table class="table table-striped table-bordered table-hover align-middle">
+        <thead class="table-dark">
           <tr>
             <th
               v-for="(column, index) in columns"
               :key="column.key"
               @click="sortTable(column.key)"
+              class="text-center"
               style="cursor: pointer;"
             >
               {{ column.label }}
@@ -30,21 +36,49 @@
                 {{ sortOrder === 'asc' ? '▲' : '▼' }}
               </span>
             </th>
-            <th v-if="showActionEdit || showActionDelete || showActionShow">Action</th>
+            <th v-if="showActionEdit || showActionDelete || showActionShow" class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, index) in paginatedRows" :key="index">
             <!-- Data -->
-            <td v-for="column in columns" :key="column.key">
+            <!-- <td v-for="column in columns" :key="column.key" class="text-center">
               {{ row[column.key] }}
+            </td> -->
+            <td v-for="column in columns" :key="column.key" class="text-center">
+              <template v-if="column.key === 'menu_is_active'">
+                <span :class="row[column.key] === 1 ? 'badge bg-success rounded-pill' : 'badge bg-danger rounded-pill'">
+                  {{ row[column.key] === 1 ? 'Active' : 'Inactive' }}
+                </span>
+              </template>
+              <template v-else>
+                {{ row[column.key] }}
+              </template>
             </td>
-            <!-- Action -->
-            <td>
-              <div>
-                <button v-if="showActionEdit" class="btn btn-info" @click="editRow(row.id)">Edit</button>
-                <button v-if="showActionShow" class="btn btn-warning" @click="showRow(row.id)">Show</button>
-                <button v-if="showActionDelete" class="btn btn-danger" @click="deleteRow(row.id)">Delete</button>
+            <!-- Actions -->
+            <td class="text-center">
+              <div class="btn-group" role="group">
+                <a
+                  v-if="showActionEdit"
+                  class="btn btn-info me-3"
+                  @click="editRow(row.id)"
+                >
+                  <i class="fas fa-user-edit"></i>
+                </a>
+                <a
+                  v-if="showActionShow"
+                  class="btn btn-warning me-3"
+                  @click="showRow(row.id)"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a
+                  v-if="showActionDelete"
+                  class="btn btn-danger me-3"
+                  @click="deleteRow(row.id)"
+                >
+                  <i class="fas fa-user-times"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -56,7 +90,9 @@
     <nav>
       <ul class="pagination justify-content-end">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a class="page-link" href="#" @click="changePage(currentPage - 1)">«</a>
+          <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">
+            «
+          </a>
         </li>
         <li
           class="page-item"
@@ -64,15 +100,20 @@
           :key="page"
           :class="{ active: currentPage === page }"
         >
-          <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
+          <a class="page-link" href="#" @click.prevent="changePage(page)">
+            {{ page }}
+          </a>
         </li>
         <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <a class="page-link" href="#" @click="changePage(currentPage + 1)">»</a>
+          <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">
+            »
+          </a>
         </li>
       </ul>
     </nav>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -177,5 +218,26 @@ export default {
 </script>
 
 <style scoped>
-/* Add your table styling here */
+/* Add table spacing for smaller screens */
+.table {
+  word-wrap: break-word;
+  font-size: 0.9rem; /* Smaller font size for better responsiveness */
+}
+
+.table th,
+.table td {
+  vertical-align: middle; /* Align text in the center vertically */
+}
+
+/* Add spacing for pagination on smaller screens */
+.pagination {
+  font-size: 0.85rem;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #198754;
+  border-color: #198754;
+  color: white;
+}
 </style>
+

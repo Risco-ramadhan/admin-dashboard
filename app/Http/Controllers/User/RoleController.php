@@ -18,19 +18,18 @@ class RoleController extends Controller
         $data = [
             'roles' => $roles
         ];
-        return Inertia::render('User/Role', $data);
+        return Inertia::render('Role/Index', $data);
     }
 
     public function show($id)
     {
         // Ambil role berdasarkan ID beserta daftar permissions-nya
-        $role = Role::with('permissions')->findOrFail($id);
+        // $role = Role::with('permissions')->findOrFail($id);
+        $role = Role::findOrFail($id);
 
-        $data = [
-            'role' => $role,
-            'permissions' => $role->permissions
-        ];
-        return Inertia::render('User/ShowRole', $data);
+        return Inertia::render('Role/View', [
+            'role' => $role
+        ]);
     }
 
     public function edit($id)
@@ -39,7 +38,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
         // Ambil semua permission
         $permissions = Permission::all();
-        return Inertia::render('User/EditRole', [
+        return Inertia::render('Role/Edit', [
             'role' => $role,
             'permissions' => $permissions,
             'assigned_permissions' => $role->permissions->pluck('id'),

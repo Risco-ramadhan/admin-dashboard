@@ -3,8 +3,20 @@
     <div class="container-fluid">
       <!-- Logo -->
       <a class="navbar-brand fw-bold" href="#">
-        Dashboard
+        {{ currentMenu }}
       </a>
+      <!-- <p class="h2 fw-bold text-decoration-underline">Home</p> -->
+      <!-- <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button> -->
 
       <!-- User Profile Dropdown -->
       <div class="dropdown">
@@ -74,12 +86,18 @@
 </template>
 
 <script>
-import DropdownLink from '@/Components/DropdownLink.vue';
-export default {
-  name: "Navbar",
-  components: {
-    DropdownLink
+  import DropdownLink from '@/Components/DropdownLink.vue';
+  export default {
+    name: "Navbar",
+    components: {
+      DropdownLink
     },
-};
-
+    props: {
+      // Pass the current menu name dynamically from the parent component
+      currentMenu: {
+        type: String,
+        default: "Home", // Default value if no menu name is passed
+      },
+    },
+  };
 </script>

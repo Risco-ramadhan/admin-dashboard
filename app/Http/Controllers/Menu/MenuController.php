@@ -58,8 +58,9 @@ class MenuController extends Controller
      */
     public function show($id)
     {
-        $menu = Menu::with('permissions')->findOrFail($id);
-        return Inertia::render('Menu/Show', [
+        // $menu = Menu::with('permissions')->findOrFail($id);
+        $menu = Menu::findOrFail($id);
+        return Inertia::render('Menu/View', [
             'menu' => $menu,
         ]);
     }
@@ -72,7 +73,7 @@ class MenuController extends Controller
         $menu = Menu::findOrFail($id);
         $permissions = Permission::all();
 
-        return Inertia::render('Menu/EditMenu', [
+        return Inertia::render('Menu/Edit', [
             'menu' => $menu,
             'permissions' => $permissions,
         ]);

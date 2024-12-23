@@ -1,8 +1,7 @@
 <template>
   <MainLayout>
-    <div class="card mt-5">
+    <div class="card my-5 rounded shadow-lg">
       <div class="container my-4">
-        <h5 class="fw-bold mb-3">Menu</h5>
 
         <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
         <PaginatedTable 
