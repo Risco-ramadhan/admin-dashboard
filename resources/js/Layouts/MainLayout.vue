@@ -1,21 +1,15 @@
 <template>
-    <div class="layout">
-      <!-- Navbar -->
+  <div>
+    <Sidebar :collapsed="sidebarCollapsed" @toggle="toggleSidebar" />
+    <div :class="['main-content', sidebarCollapsed ? 'collapsed' : '']">
       <Navbar />
-  
-      <div class="main-content">
-        <!-- Sidebar -->
-        <Sidebar />
-  
-        <!-- Slot for page content -->
+      <div class="container mt-4">
         <div class="content">
           <slot />
         </div>
       </div>
-  
-      <!-- Footer -->
-      <Footer />
     </div>
+  </div>
   </template>
   
   <script>
@@ -24,38 +18,30 @@
   import Footer from "@/Components/Footer.vue";
   
   export default {
-    name: "MainLayout",
-    components: {
-      Navbar,
-      Sidebar,
-      Footer,
+  components: {
+    Sidebar,
+    Navbar,
+  },
+  data() {
+    return {
+      sidebarCollapsed: false,
+    };
+  },
+  methods: {
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
     },
-  };
+  },
+};
   </script>
   
-  <style scoped>
-  .layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
+  <style>
   .main-content {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease-in-out;
   }
   
-  .content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-  }
-  
-  @media (max-width: 768px) {
-    .main-content {
-      flex-direction: column;
-    }
+  .main-content.collapsed {
+    margin-left: 80px;
   }
   </style>
-  

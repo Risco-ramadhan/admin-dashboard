@@ -31,13 +31,21 @@ Route::get('/', [AuthenticatedSessionController::class, 'create'])
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('user.view');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users', [UserController::class, 'store'])->name('user.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
     Route::get('/role', [RoleController::class, 'index'])->name('role');
-    Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.show');
+    Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.view');
     Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
     Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
 
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+    Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');
     Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::put('/menu/{id}/edit', [MenuController::class, 'update'])->name('menu.update');
     Route::get('/permission', [PermissionController::class, 'index'])->name('permission.menu');

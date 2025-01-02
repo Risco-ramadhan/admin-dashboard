@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-    <div class="card mt-5">
+    <div class="card my-5 rounded shadow-lg">
       <div class="container my-4">
         <h5 class="fw-bold mb-3">User</h5>
 
@@ -8,7 +8,9 @@
         <PaginatedTable 
           :rows="users" 
           :columns="columns"
-          :itemsPerPage="3" 
+          :itemsPerPage="3"
+          @add="handleAddUser"
+          @show="handleShowUser"
           @edit="handleEditUser" 
           @delete="handleDeleteUser" 
         />
@@ -39,15 +41,23 @@ export default {
     };
   },
   props: {
-    users: Array, // Pastikan Anda mendefinisikan `users` sebagai prop
+    users: Array,
   },
   methods: {
-    // Menangani event edit user
-    handleEditUser(user) {
+    handleAddUser() {
+      this.$inertia.visit("/user/create");
+    },
+
+    handleEditUser(id) {
       // Arahkan ke halaman edit atau tampilkan modal
-      console.log('Edit user:', user);
+      console.log('Edit user:', id);
       // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/users/${user.id}/edit`);
+      this.$inertia.visit(`/users/${id}/edit`);
+    },
+    
+    handleShowUser(id) {
+      // Use $inertia.visit for navigation
+      this.$inertia.visit(`/users/${id}`); // Correct route path
     },
 
     // Menangani event delete user

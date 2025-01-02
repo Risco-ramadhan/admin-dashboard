@@ -1,63 +1,64 @@
 <template>
-  <div class="sidebar bg-white border-end shadow-sm" style="width: 230px; min-height: 100vh;">
-    <!-- Sidebar Header -->
-    <div class="mt-4 ps-3 text-muted small fw-bold">Dashboard</div>
-
-    <!-- Sidebar Menu -->
-    <ul class="nav flex-column">
-      <!-- Home Menu -->
-      <li class="nav-item">
-        <DropdownLink :href="route('dashboard')">
-          <i class="bi bi-house-door me-2"></i>
-          <span>Home</span>
-        </DropdownLink>
+  <div :class="['sidebar', collapsed ? 'collapsed' : 'expanded']">
+    <ul class="ms-2">
+      <li @click="$emit('toggle')" class="d-flex justify-content-center align-items-center py-3">
+        <img
+          src="../../../public/assets/images/logo_sisi.webp"
+          class="img-fluid"
+          alt="Logo"
+          style="max-width: 100%; max-height: 50px;"
+        />
       </li>
+      <!-- <li @click="$emit('toggle')">
+        <i class="bi bi-list"></i>
+        <img src="../../../public/assets/images/logo_sisi.webp" class="img-fluid" alt="Sample image" />
+      </li> -->
 
-      <!-- Dashboard with Dropdown -->
+      <!-- Dashboard Menu with Dropdown -->
+      <a :href="route('dashboard')">
+        <li class="nav-item">
+          <i class="bi bi-house-door me-2"></i>
+          <span v-if="!collapsed">Home</span>
+        </li>
+      </a>
       <li class="nav-item">
         <a
           href="#"
-          class="nav-link d-flex justify-content-between align-items-center"
+          class="d-flex justify-content-between align-items-center"
           @click="toggleDropdown"
           style="cursor: pointer;"
         >
           <div>
-            <i class="bi bi-columns me-2"></i>
-            <span>Dashboard</span>
+            <i class="fas fa-users-cog me-2"></i>
+            <span v-if="!collapsed">User</span>
           </div>
-          <i :class="dropdownOpen ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          <i v-if="!collapsed" :class="dropdownOpen ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
         </a>
 
         <!-- Dropdown Content -->
-        <ul class="nav flex-column ps-4" v-show="dropdownOpen">
+        <ul class="nav" v-show="dropdownOpen">
           <li class="nav-item">
-            <DropdownLink :href="route('user')">
-              <i class="bi bi-bar-chart me-2"></i>
-              <span>User Management</span>
-            </DropdownLink>
+            <a :href="route('user')">
+              <i class="fas fa-user-cog"></i>
+              <span v-if="!collapsed">User Management</span>
+            </a>
           </li>
           <li class="nav-item">
-            <DropdownLink :href="route('role')">
-              <i class="bi bi-bar-chart me-2"></i>
-              <span>Role Management</span>
-            </DropdownLink>
+            <a :href="route('role')">
+              <i class="fas fa-user-shield"></i>
+              <span v-if="!collapsed">Role Management</span>
+            </a>
           </li>
           <li class="nav-item">
-            <DropdownLink :href="route('menu')">
-              <i class="bi bi-bar-chart me-2"></i>
-              <span>Menu Management</span>
-            </DropdownLink>
+            <a :href="route('menu')">
+              <i class="fas fa-user-tag"></i>
+              <span v-if="!collapsed">Menu Management</span>
+            </a>
           </li>
           <li class="nav-item">
-            <DropdownLink :href="route('permission.menu')">
-              <i class="bi bi-book me-2"></i>
-              <span>Permission Menu</span>
-            </DropdownLink>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center" @click.prevent="navigateTo('/logistics')">
-              <i class="bi bi-truck me-2"></i>
-              <span>Logistics</span>
+            <a :href="route('permission.menu')">
+              <i class="fas fa-user-lock"></i>
+              <span v-if="!collapsed">Permission Menu</span>
             </a>
           </li>
         </ul>
@@ -68,25 +69,84 @@
 
 <script>
 import DropdownLink from '@/Components/DropdownLink.vue';
+import Logo from '../../../public/assets/images/logo_sisi.webp';
 
 export default {
   name: "Sidebar",
+  components : {
+    DropdownLink,
+    Logo
+  },
+  props: {
+    collapsed: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      dropdownOpen: false, // Awalnya dropdown dalam keadaan tertutup
+      dropdownOpen: false,
     };
-  },
-  components : {
-    DropdownLink
   },
   methods: {
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
     },
-    navigateTo(route) {
-      console.log('Mantap');
-      Inertia.get(route);
-    },
   },
 };
 </script>
+
+<style>
+.sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1a1a2e;
+  color: white;
+  transition: width 0.3s ease-in-out;
+  overflow-x: hidden;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.expanded {
+  width: 250px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar ul li i {
+  font-size: 18px;
+}
+
+.sidebar ul li span {
+  margin-left: 10px;
+}
+
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-link:hover {
+  color: #cccccc;
+}
+
+.nav .nav-item {
+  padding-left: 10px;
+}
+</style>

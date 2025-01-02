@@ -48,7 +48,7 @@ const submit = () => {
                             <!-- Form Section -->
                             <div class="col-md-6">
                                 <div class="card-body d-flex flex-column justify-content-center">
-                                    <p class="h1 text-center">ITAM SISI</p>
+                                    <p class="h1 text-center">Dashboard SISI</p>
                                     
                                     <form @submit.prevent="submit" class="pt-4">
                                         <!-- Email input -->
@@ -86,13 +86,6 @@ const submit = () => {
                                                     Remember me
                                                 </label>
                                             </div>
-                                            <Link
-                                                v-if="canResetPassword"
-                                                :href="route('password.request')"
-                                                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            >
-                                                Forgot your password?
-                                            </Link>
                                         </div>
                                       
                                         <div class="text-center text-lg-start mt-4 pt-2">

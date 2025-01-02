@@ -1,8 +1,8 @@
 <template>
   <MainLayout>
-    <div class="card mt-5">
+    <div class="card my-5 rounded shadow-lg">
       <div class="container my-4">
-        <h5 class="fw-bold mb-3">Menu</h5>
+        <h5 class="fw-bold mb-3">Role</h5>
 
         <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
         <PaginatedTable 
@@ -13,9 +13,9 @@
           :showActionAdd="true" 
           :showActionShow="true" 
           :showActionDelete="true" 
-          @edit="handleEdit" 
-          @show="handleShow" 
-          @delete="handleDelete"
+          @edit="handleEditRole" 
+          @show="handleShowRole" 
+          @delete="handleDeleteRole"
           @add="handleAddRole" 
         />
       </div>
@@ -29,7 +29,7 @@ import PaginatedTable from "@/Components/PaginatedTable.vue"; // Import komponen
 import axios from 'axios'; // Jika menggunakan axios untuk API
 
 export default {
-  name: "UserIndex",
+  name: "RoleIndex",
   components: {
     MainLayout,
     PaginatedTable,
@@ -45,42 +45,36 @@ export default {
     };
   },
   props: {
-    roles: Array, // Pastikan Anda mendefinisikan `users` sebagai prop
+    roles: Array,
   },
   methods: {
-    // Menangani event edit user
-    handleEdit(id) {
-      // Arahkan ke halaman edit atau tampilkan modal
-      console.log('Edit user:', id);
-      // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/role/${id}/edit`);
+    handleAddRole() {
+      this.$inertia.visit("/role/create");
     },
-    handleShow(id) {
-      // Arahkan ke halaman edit atau tampilkan modal
-      console.log('Show user:', id);
-      // Misalnya, arahkan ke halaman edit
+    
+    handleShowRole(id) {
       this.$inertia.visit(`/role/${id}`);
     },
-    // Menangani event delete user
-    handleDelete(userId) {
 
-      console.log(userId);
-      if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-        axios.delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
+    handleEditRole(id) {
+      this.$inertia.visit(`/role/${id}/edit`);
+    },
+    
+    handleDeleteRole(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus role ini?")) {
+        axios.delete(`/api/roles/${id}`)
           .then(() => {
-            this.fetchUsers(); // Refresh data pengguna setelah penghapusan
-            alert('Pengguna berhasil dihapus!');
+            this.fetchRoles(); // Refresh data roles setelah penghapusan
+            alert('Role berhasil dihapus!');
           })
           .catch((error) => {
             console.error(error);
-            alert('Gagal menghapus pengguna.');
+            alert('Gagal menghapus role.');
           });
       }
-    },
-    handleAddRole(){
-      alert('Tambah');
     }
   },
+
   mounted() {
   },
 };

@@ -1,8 +1,7 @@
 <template>
   <MainLayout>
-    <div class="card mt-5">
+    <div class="card my-5 shadow-lg rounded">
       <div class="container my-4">
-        <h5 class="fw-bold mb-3">Menu</h5>
 
         <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
         <PaginatedTable 
@@ -11,7 +10,7 @@
           :itemsPerPage="10" 
           :showActionEdit="true" 
           :showActionAdd="true" 
-          :showActionShow="false" 
+          :showActionShow="true" 
           :showActionDelete="true" 
           @edit="handleEdit" 
           @show="handleShow" 
@@ -64,7 +63,7 @@ export default {
       // Arahkan ke halaman edit atau tampilkan modal
       console.log('Show user:', id);
       // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/role/${id}`);
+      this.$inertia.visit(`/menu/${id}`);
     },
     // Menangani event delete user
     handleDelete(userId) {
