@@ -24,7 +24,7 @@
                                         required
                                     />
                                 </div>
-                                <!-- <div class="mb-3">
+                                <div class="mb-3">
                                     <label class="form-label"
                                         >Permissions</label
                                     >
@@ -43,7 +43,7 @@
                                             >{{ permission.name }}</label
                                         >
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="d-flex justify-content-between">
                                     <button
                                         type="button"
@@ -80,13 +80,13 @@ export default {
 
     props: {
         role: Object,
-        // permissions: Array,
+        permissions: Array,
     },
 
     setup(props) {
         const form = useForm({
             name: props.role.name,
-            // permissions: props.role.permissions.map((p) => p.id),
+            permissions: props.role.permissions.map((p) => p.id),
         });
 
         const handleUpdateRole = () => {

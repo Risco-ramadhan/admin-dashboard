@@ -61,11 +61,11 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::with('permissions')->findOrFail($id);
-        // $permissions = Permission::all();
+        $permissions = Permission::all();
 
         return Inertia::render('Role/Edit', [
             'role' => $role,
-            // 'permissions' => $permissions,
+            'permissions' => $permissions,
         ]);
     }
 
@@ -73,6 +73,7 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'permissions' => 'array', // Make sure 'permissions' is an array
         ]);
 
         $role = Role::findOrFail($id);
@@ -81,13 +82,16 @@ class RoleController extends Controller
             $role->name = $request->name;
             $role->save();
 
+            if ($request->has('permissions')) {
+                $role->permissions()->sync($request->permissions);
+            }
+
             return redirect()->route('role')->with('success', 'Role updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('role')->with('error', 'Role update failed.');
+            return redirect()->route('role')->with('error', 'Role update failed: ' . $e->getMessage());
         }
-
-        return redirect()->route('role')->with('success', 'Role updated successfully.');
     }
+
 
     public function destroy($id)
     {
