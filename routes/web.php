@@ -40,9 +40,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
     Route::get('/role', [RoleController::class, 'index'])->name('role');
+    Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
+    Route::post('/role', [RoleController::class, 'store'])->name('role.store');
     Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.view');
     Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
     Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
+    Route::delete('/role/{id}/destroy', [RoleController::class, 'destroy'])->name('role.destroy');
 
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
     Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\User;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -15,49 +15,90 @@ class RoleController extends Controller
         // Ambil semua role beserta jumlah permission
         $roles = Role::withCount('permissions')->get();
 
-        $data = [
+        return Inertia::render('Role/Index', [
             'roles' => $roles
-        ];
-        return Inertia::render('Role/Index', $data);
+        ]);
+    }
+
+    public function create()
+    {
+        $permissions = Permission::all();
+
+        return Inertia::render('Role/Create', [
+            'permissions' => $permissions,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        try {
+            //code...
+            Role::create([
+                'name' => $request->name,
+                'guard_name' => 'web',
+            ]);
+
+            return redirect()->route('role')->with('success', 'Role created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('role')->with('error', 'Role create failed.');
+        }
     }
 
     public function show($id)
     {
-        // Ambil role berdasarkan ID beserta daftar permissions-nya
-        // $role = Role::with('permissions')->findOrFail($id);
-        $role = Role::findOrFail($id);
+        $role = Role::with('permissions')
+            ->findOrFail($id);
 
         return Inertia::render('Role/View', [
-            'role' => $role
+            'role' => $role,
         ]);
     }
 
     public function edit($id)
     {
-        // Ambil role berdasarkan ID
-        $role = Role::findOrFail($id);
-        // Ambil semua permission
-        $permissions = Permission::all();
+        $role = Role::with('permissions')->findOrFail($id);
+        // $permissions = Permission::all();
+
         return Inertia::render('Role/Edit', [
             'role' => $role,
-            'permissions' => $permissions,
-            'assigned_permissions' => $role->permissions->pluck('id'),
+            // 'permissions' => $permissions,
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
+            'name' => 'required|string|max:255',
         ]);
 
-        // Ambil role
         $role = Role::findOrFail($id);
 
-        // Sinkronisasi permission
-        $role->syncPermissions($request->permissions);
+        try {
+            $role->name = $request->name;
+            $role->save();
+
+            return redirect()->route('role')->with('success', 'Role updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('role')->with('error', 'Role update failed.');
+        }
+
         return redirect()->route('role')->with('success', 'Role updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $role = Role::findOrFail($id);
+
+        try {
+            $role->delete();
+
+            return redirect()->route('role')->with('success', 'Role deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('role')->with('error', 'Role delete failed.');
+        }
     }
 }
