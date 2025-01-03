@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.view');
     Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
     Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
-    Route::delete('/role/{id}/destroy', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::delete('/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
 
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
     Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');

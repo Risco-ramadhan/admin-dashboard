@@ -19,7 +19,7 @@
                                         type="text"
                                         class="form-control"
                                         id="name"
-                                        v-model="role.name"
+                                        v-model="form.name"
                                         placeholder="Enter role's name"
                                         required
                                     />
@@ -71,7 +71,7 @@ export default {
         };
 
         return {
-            role,
+            form, // Return 'form' to be used in the template
             handleCreateRole,
         };
     },

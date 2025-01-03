@@ -63,7 +63,7 @@ export default {
         },
         handleDeleteRole(id) {
             if (confirm("Apakah Anda yakin ingin menghapus role ini?")) {
-                this.$inertia.delete(`/role/${id}/destroy`);
+                this.$inertia.delete(`/role/${id}`);
             }
         },
     },
