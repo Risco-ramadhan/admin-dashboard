@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -88,7 +88,7 @@ class UserController extends Controller
     {
         $user = User::with('roles')->findOrFail($id);
         $roles = Role::all();
-    
+
         return Inertia::render('User/Edit', [
             'user' => [
                 'id' => $user->id,
@@ -117,10 +117,10 @@ class UserController extends Controller
         ]);
 
         $user->syncRoles($validated['roles']);
-    
+
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
-    
+
 
     public function destroy($id)
     {
