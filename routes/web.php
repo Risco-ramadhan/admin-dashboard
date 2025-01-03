@@ -3,13 +3,13 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
-use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Menu\MenuController;
-use App\Http\Controllers\Menu\PermissionController;
+use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\PermissionController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
