@@ -51,7 +51,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');
     Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::put('/menu/{id}/edit', [MenuController::class, 'update'])->name('menu.update');
-    Route::get('/permission', [PermissionController::class, 'index'])->name('permission.menu');
+
+    Route::get('/permission', [PermissionController::class, 'index'])->name('permission');
+    Route::get('/permission/create', [PermissionController::class, 'create'])->name('permission.create');
+    Route::post('/permission', [PermissionController::class, 'store'])->name('permission.store');
+    Route::get('/permission/{id}', [PermissionController::class, 'show'])->name('permission.view');
+    Route::get('/permission/{id}/edit', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::put('/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
+    Route::delete('/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
 });
 
 Route::middleware('auth')->group(function () {

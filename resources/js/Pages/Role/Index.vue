@@ -1,14 +1,21 @@
 <template>
     <MainLayout>
-        <div class="card my-5 rounded shadow-lg">
-            <div class="container my-4">
-                <h5 class="fw-bold mb-3">Role</h5>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none">Home</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Role</li>
+            </ol>
+        </nav>
 
+        <div class="card my-3 rounded shadow-lg">
+            <div class="container my-4">
                 <div v-if="roles && roles.length">
                     <PaginatedTable
                         :rows="roles"
                         :columns="columns"
-                        :itemsPerPage="3"
+                        :itemsPerPage="5"
                         :showActionEdit="true"
                         :showActionAdd="true"
                         :showActionShow="true"

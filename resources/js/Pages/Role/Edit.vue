@@ -1,6 +1,19 @@
 <template>
     <MainLayout>
-        <div class="container my-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/permission" class="text-decoration-none">Role</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Create
+                </li>
+            </ol>
+        </nav>
+        <div class="container my-3">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
                     <div class="card rounded shadow-lg">

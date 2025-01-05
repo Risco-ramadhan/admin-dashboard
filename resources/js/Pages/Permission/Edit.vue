@@ -6,25 +6,25 @@
                     <a href="/" class="text-decoration-none">Home</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="/permission" class="text-decoration-none">Role</a>
+                    <a href="/permission" class="text-decoration-none"
+                        >Permission</a
+                    >
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    Create
-                </li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
             </ol>
         </nav>
 
-        <div class="container my-3">
+        <div class="container my-5">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
                     <div class="card rounded shadow-lg">
                         <div class="card-header bg-primary text-white">
                             <h5 class="fw-bold mb-0 text-center">
-                                Create New Role
+                                Edit Permission
                             </h5>
                         </div>
                         <div class="card-body">
-                            <form @submit.prevent="handleCreateRole">
+                            <form @submit.prevent="handleEditPermission">
                                 <div class="mb-3">
                                     <label for="name" class="form-label"
                                         >Name</label
@@ -34,7 +34,7 @@
                                         class="form-control"
                                         id="name"
                                         v-model="form.name"
-                                        placeholder="Enter role's name"
+                                        placeholder="Enter permission's name"
                                         required
                                     />
                                 </div>
@@ -50,7 +50,7 @@
                                         type="submit"
                                         class="btn btn-primary"
                                     >
-                                        Create
+                                        Update
                                     </button>
                                 </div>
                             </form>
@@ -67,17 +67,20 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import { useForm } from "@inertiajs/vue3";
 
 export default {
-    name: "CreateRole",
+    name: "EditPermission",
     components: {
         MainLayout,
     },
-    setup() {
+    props: {
+        permission: Object, // Prop to receive the permission data passed from the backend
+    },
+    setup(props) {
         const form = useForm({
-            name: "",
+            name: props.permission.name, // Preload the permission data into the form
         });
 
-        const handleCreateRole = () => {
-            form.post("/role", {
+        const handleEditPermission = () => {
+            form.put(`/permission/${props.permission.id}`, {
                 onSuccess: () => {
                     form.reset(); // Reset form after successful submission
                 },
@@ -86,12 +89,12 @@ export default {
 
         return {
             form, // Return 'form' to be used in the template
-            handleCreateRole,
+            handleEditPermission,
         };
     },
     methods: {
         goBack() {
-            this.$inertia.visit("/role");
+            this.$inertia.visit("/permission");
         },
     },
 };
