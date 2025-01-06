@@ -27,10 +27,14 @@ class MenuController extends Controller
      */
     public function create()
     {
-        // Ambil semua izin untuk ditampilkan sebagai checkbox
-        $permissions = Permission::all();
+        $menus = Menu::select('id', 'menu_label')->get();
+
+        $permissions = Permission::where('name', 'ILIKE', '%menu%')
+            ->get();
+
         return Inertia::render('Menu/Create', [
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'parent_menus' => $menus
         ]);
     }
 

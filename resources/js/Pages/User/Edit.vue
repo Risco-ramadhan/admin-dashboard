@@ -1,6 +1,17 @@
 <template>
   <MainLayout>
-    <div class="card my-5 shadow-lg rounded">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/dashboard" class="text-decoration-none">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/user" class="text-decoration-none">User</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Create</li>
+      </ol>
+    </nav>
+    <div class="card my-3 shadow-lg rounded">
       <div class="container py-4" v-if="user">
         <h5 class="text-start fw-bold mb-4">Edit User</h5>
         <div class="container">
@@ -48,11 +59,7 @@
             </div>
             <!-- Action Buttons -->
             <div class="d-flex justify-content-end mt-4">
-              <button
-                class="btn btn-secondary me-2"
-                type="button"
-                @click="goBack"
-              >
+              <button class="btn btn-secondary me-2" type="button" @click="goBack">
                 <i class="bi bi-arrow-left"></i> Back
               </button>
               <button type="submit" class="btn btn-primary">
@@ -64,7 +71,10 @@
       </div>
       <!-- Loading State -->
       <div v-else>
-        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 200px"
+        >
           <div class="text-center">
             <div class="spinner-border text-primary mb-3" role="status">
               <span class="visually-hidden">Loading...</span>

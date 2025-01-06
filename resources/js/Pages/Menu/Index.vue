@@ -1,21 +1,29 @@
 <template>
   <MainLayout>
-    <div class="card my-5 shadow-lg rounded">
-      <div class="container my-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/dashboard" class="text-decoration-none">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Menu</li>
+      </ol>
+    </nav>
 
+    <div class="card my-3 shadow-lg rounded">
+      <div class="container my-4">
         <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
-        <PaginatedTable 
-          :rows="menus" 
+        <PaginatedTable
+          :rows="menus"
           :columns="columns"
-          :itemsPerPage="10" 
-          :showActionEdit="true" 
-          :showActionAdd="true" 
-          :showActionShow="true" 
-          :showActionDelete="true" 
-          @edit="handleEdit" 
-          @show="handleShow" 
-          @delete="handleDelete"
-          @add="handleAddRole" 
+          :itemsPerPage="10"
+          :showActionEdit="true"
+          :showActionAdd="true"
+          :showActionShow="true"
+          :showActionDelete="true"
+          @edit="handleEditMenu"
+          @show="handleShowMenu"
+          @delete="handleDeleteMenu"
+          @add="handleAddMenu"
         />
       </div>
     </div>
@@ -25,7 +33,7 @@
 <script>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import PaginatedTable from "@/Components/PaginatedTable.vue"; // Import komponen PaginatedTable
-import axios from 'axios'; // Jika menggunakan axios untuk API
+import axios from "axios"; // Jika menggunakan axios untuk API
 
 export default {
   name: "UserIndex",
@@ -35,7 +43,6 @@ export default {
   },
   data() {
     return {
-
       users: [],
       columns: [
         { key: "menu_label", label: "Name" },
@@ -50,42 +57,41 @@ export default {
   props: {
     menus: Array, // Pastikan Anda mendefinisikan `users` sebagai prop
     success: String, // Pesan sukses
-    errors: Object,  // Pesan error
+    errors: Object, // Pesan error
   },
   methods: {
-    handleEdit(id) {
+    handleEditMenu(id) {
       // Arahkan ke halaman edit atau tampilkan modal
-      console.log('Edit user:', id);
+      console.log("Edit user:", id);
       // Misalnya, arahkan ke halaman edit
       this.$inertia.visit(`/menu/${id}/edit`);
     },
-    handleShow(id) {
+    handleShowMenu(id) {
       // Arahkan ke halaman edit atau tampilkan modal
-      console.log('Show user:', id);
+      console.log("Show user:", id);
       // Misalnya, arahkan ke halaman edit
       this.$inertia.visit(`/menu/${id}`);
     },
     // Menangani event delete user
-    handleDelete(userId) {
-
+    handleDeleteMenu(userId) {
       console.log(userId);
       if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-        axios.delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
+        axios
+          .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
           .then(() => {
             this.fetchUsers(); // Refresh data pengguna setelah penghapusan
-            alert('Pengguna berhasil dihapus!');
+            alert("Pengguna berhasil dihapus!");
           })
           .catch((error) => {
             console.error(error);
-            alert('Gagal menghapus pengguna.');
+            alert("Gagal menghapus pengguna.");
           });
       }
     },
-    handleAddRole(){
-      alert('Tambah');
-    }
+    handleAddMenu() {
+      this.$inertia.visit(`/menu/create`);
+    },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>

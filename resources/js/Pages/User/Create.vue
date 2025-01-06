@@ -1,5 +1,16 @@
 <template>
   <MainLayout>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/dashboard" class="text-decoration-none">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/user" class="text-decoration-none">User</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Create</li>
+      </ol>
+    </nav>
     <div class="container my-5">
       <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -44,28 +55,17 @@
                 </div>
                 <div class="mb-3">
                   <label for="roles" class="form-label">Roles</label>
-                  <select
-                    class="form-select"
-                    id="roles"
-                    v-model="user.roles"
-                    required
-                  >
+                  <select class="form-select" id="roles" v-model="user.roles" required>
                     <option disabled value="">Select role</option>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                   </select>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    @click="goBack"
-                  >
+                  <button type="button" class="btn btn-secondary" @click="goBack">
                     Cancel
                   </button>
-                  <button type="submit" class="btn btn-primary">
-                    Create
-                  </button>
+                  <button type="submit" class="btn btn-primary">Create</button>
                 </div>
               </form>
             </div>

@@ -48,9 +48,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
 
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+    Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
     Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');
     Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
-    Route::put('/menu/{id}/edit', [MenuController::class, 'update'])->name('menu.update');
+    Route::put('/menu/{id}/update', [MenuController::class, 'update'])->name('menu.update');
 
     Route::get('/permission', [PermissionController::class, 'index'])->name('permission');
     Route::get('/permission/create', [PermissionController::class, 'create'])->name('permission.create');
