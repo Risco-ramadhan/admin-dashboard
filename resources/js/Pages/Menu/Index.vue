@@ -61,20 +61,15 @@ export default {
   },
   methods: {
     handleEditMenu(id) {
-      // Arahkan ke halaman edit atau tampilkan modal
-      console.log("Edit user:", id);
       // Misalnya, arahkan ke halaman edit
       this.$inertia.visit(`/menu/${id}/edit`);
     },
     handleShowMenu(id) {
-      // Arahkan ke halaman edit atau tampilkan modal
-      console.log("Show user:", id);
       // Misalnya, arahkan ke halaman edit
       this.$inertia.visit(`/menu/${id}`);
     },
     // Menangani event delete user
     handleDeleteMenu(userId) {
-      console.log(userId);
       if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
         axios
           .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda

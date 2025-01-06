@@ -20,7 +20,7 @@
               <h5 class="fw-bold mb-0">Create New Menu</h5>
             </div>
             <div class="card-body">
-              <form @submit.prevent="handleCreateMenu">
+              <form @submit.prevent="handleStoreMenu">
                 <div class="mb-3">
                   <label for="menu_label" class="form-label">Menu Label</label>
                   <input
@@ -60,7 +60,7 @@
                   <label for="menu_parent" class="form-label">Menu Parent</label>
                   <v-select
                     v-model="form.menu_parent"
-                    :options="parentMenus"
+                    :options="parent_menus"
                     label="menu_label"
                     :get-option-label="(option) => option.menu_label"
                     placeholder="Search and select parent menu"
@@ -137,7 +137,9 @@ export default {
       required: true,
     },
   },
+
   setup() {
+    // console.log("permissions data", this.permissions);
     const form = useForm({
       menu_label: "",
       menu_route: "",
@@ -147,14 +149,14 @@ export default {
       menu_is_active: true,
     });
 
-    const handleCreateMenu = () => {
+    const handleStoreMenu = () => {
       const postData = {
         ...form,
-        menu_permission: form.menu_permission?.id, // Send only the ID of the permission
-        menu_parent: form.menu_parent?.id, // Send only the ID of the parent menu
+        menu_permission: form.menu_permission?.id || null, // Send the whole permission object
+        menu_parent: form.menu_parent?.id, // Parent menu is fine as it is.
       };
 
-      form.post("/menu", {
+      form.post("/menu/store", {
         data: postData,
         onSuccess: () => form.reset(),
       });
@@ -162,7 +164,7 @@ export default {
 
     return {
       form,
-      handleCreateMenu,
+      handleStoreMenu,
     };
   },
   methods: {

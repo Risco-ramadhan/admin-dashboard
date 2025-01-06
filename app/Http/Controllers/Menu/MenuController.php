@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Menu;
 
 use App\Models\Menu;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class MenuController extends Controller
@@ -15,7 +15,18 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $menus = Menu::all();
+        $menus = Menu::with('permission')
+            ->get()
+            ->map(function ($menu) {
+                return [
+                    'id' => $menu->id,
+                    'menu_label' => $menu->menu_label,
+                    'menu_route' => $menu->menu_route,
+                    'menu_level' => $menu->menu_level,
+                    'menu_permission' => $menu->permission->name ?? 'No Permission', // Extract permission name
+                    'menu_is_active' => $menu->menu_is_active ? 'Active' : 'Inactive', // Format active status
+                ];
+            });
         $data = [
             'menus' => $menus
         ];
@@ -43,18 +54,28 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the incoming request
         $validated = $request->validate([
             'menu_label' => 'required|string|max:255',
             'menu_route' => 'nullable|string|max:255',
             'menu_level' => 'required|integer',
             'menu_parent' => 'nullable|uuid',
-            'menu_permission' => 'nullable|string|max:255',
+            'menu_permission' => 'nullable|array|max:255',
             'menu_is_active' => 'required|boolean',
         ]);
 
-        $menu = Menu::create($validated);
+        // Prepare the menu permission ID by extracting only the ID from the nested object
+        if (isset($validated['menu_permission']) && is_array($validated['menu_permission'])) {
+            $validated['menu_permission'] = $validated['menu_permission']['id'] ?? null;
+        }
 
-        return redirect()->route('menu.index')->with('success', 'Menu created successfully.');
+        try {
+            $menu = Menu::create($validated);
+
+            return redirect()->route('menu')->with('success', 'Menu created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('menu')->with('error', 'Menu create failed.');
+        }
     }
 
     /**
