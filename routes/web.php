@@ -10,6 +10,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\PermissionController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ItamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/permission/{id}/edit', [PermissionController::class, 'edit'])->name('permission.edit');
     Route::put('/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
     Route::delete('/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+
+    Route::prefix('itam')->group(function () {
+        Route::get('/', [ItamController::class, 'index'])->name('itam');
+    });
 });
 
 Route::middleware('auth')->group(function () {

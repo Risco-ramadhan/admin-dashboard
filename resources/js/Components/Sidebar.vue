@@ -73,6 +73,12 @@
                     </li>
                 </ul>
             </li>
+            <a :href="route('itam')">
+                <li class="nav-item">
+                    <i class="bi bi-app me-2"></i>
+                    <span v-if="!collapsed">Itam</span>
+                </li>
+            </a>
         </ul>
     </div>
 </template>
