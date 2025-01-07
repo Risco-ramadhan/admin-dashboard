@@ -1,33 +1,33 @@
 <template>
-  <MainLayout>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="/dashboard" class="text-decoration-none">Home</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Menu</li>
-      </ol>
-    </nav>
+    <MainLayout>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/dashboard" class="text-decoration-none">Home</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Menu</li>
+            </ol>
+        </nav>
 
-    <div class="card my-3 shadow-lg rounded">
-      <div class="container my-4">
-        <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
-        <PaginatedTable
-          :rows="menus"
-          :columns="columns"
-          :itemsPerPage="10"
-          :showActionEdit="true"
-          :showActionAdd="true"
-          :showActionShow="true"
-          :showActionDelete="true"
-          @edit="handleEditMenu"
-          @show="handleShowMenu"
-          @delete="handleDeleteMenu"
-          @add="handleAddMenu"
-        />
-      </div>
-    </div>
-  </MainLayout>
+        <div class="card my-3 shadow-lg rounded">
+            <div class="container my-4">
+                <!-- Panggil komponen PaginatedTable dan kirimkan data pengguna -->
+                <PaginatedTable
+                    :rows="menus"
+                    :columns="columns"
+                    :itemsPerPage="10"
+                    :showActionEdit="true"
+                    :showActionAdd="true"
+                    :showActionShow="true"
+                    :showActionDelete="true"
+                    @edit="handleEditMenu"
+                    @show="handleShowMenu"
+                    @delete="handleDeleteMenu"
+                    @add="handleAddMenu"
+                />
+            </div>
+        </div>
+    </MainLayout>
 </template>
 
 <script>
@@ -36,57 +36,58 @@ import PaginatedTable from "@/Components/PaginatedTable.vue"; // Import komponen
 import axios from "axios"; // Jika menggunakan axios untuk API
 
 export default {
-  name: "UserIndex",
-  components: {
-    MainLayout,
-    PaginatedTable,
-  },
-  data() {
-    return {
-      users: [],
-      columns: [
-        { key: "menu_label", label: "Name" },
-        { key: "menu_route", label: "Route" },
-        { key: "menu_level", label: "Level" },
-        { key: "menu_permission", label: "Permission" },
-        { key: "menu_is_active", label: "Is Active" },
-      ],
-    };
-  },
+    name: "UserIndex",
+    components: {
+        MainLayout,
+        PaginatedTable,
+    },
+    data() {
+        return {
+            users: [],
+            columns: [
+                { key: "menu_label", label: "Name" },
+                { key: "menu_route", label: "Route" },
+                { key: "menu_level", label: "Level" },
+                { key: "menu_permission", label: "Permission" },
+                { key: "menu_parent", label: "Parent" },
+                { key: "menu_is_active", label: "Is Active" },
+            ],
+        };
+    },
 
-  props: {
-    menus: Array, // Pastikan Anda mendefinisikan `users` sebagai prop
-    success: String, // Pesan sukses
-    errors: Object, // Pesan error
-  },
-  methods: {
-    handleEditMenu(id) {
-      // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/menu/${id}/edit`);
+    props: {
+        menus: Array, // Pastikan Anda mendefinisikan `users` sebagai prop
+        success: String, // Pesan sukses
+        errors: Object, // Pesan error
     },
-    handleShowMenu(id) {
-      // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/menu/${id}`);
+    methods: {
+        handleEditMenu(id) {
+            // Misalnya, arahkan ke halaman edit
+            this.$inertia.visit(`/menu/${id}/edit`);
+        },
+        handleShowMenu(id) {
+            // Misalnya, arahkan ke halaman edit
+            this.$inertia.visit(`/menu/${id}`);
+        },
+        // Menangani event delete user
+        handleDeleteMenu(userId) {
+            if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
+                axios
+                    .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
+                    .then(() => {
+                        this.fetchUsers(); // Refresh data pengguna setelah penghapusan
+                        alert("Pengguna berhasil dihapus!");
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        alert("Gagal menghapus pengguna.");
+                    });
+            }
+        },
+        handleAddMenu() {
+            this.$inertia.visit(`/menu/create`);
+        },
     },
-    // Menangani event delete user
-    handleDeleteMenu(userId) {
-      if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-        axios
-          .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
-          .then(() => {
-            this.fetchUsers(); // Refresh data pengguna setelah penghapusan
-            alert("Pengguna berhasil dihapus!");
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("Gagal menghapus pengguna.");
-          });
-      }
-    },
-    handleAddMenu() {
-      this.$inertia.visit(`/menu/create`);
-    },
-  },
-  mounted() {},
+    mounted() {},
 };
 </script>

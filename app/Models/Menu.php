@@ -18,4 +18,14 @@ class Menu extends Model
     {
         return $this->belongsTo(Permission::class, 'menu_permission', 'id');
     }
+
+    public function children()
+    {
+        return $this->hasMany(Menu::class, 'menu_parent', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Menu::class, 'menu_parent', 'id');
+    }
 }
