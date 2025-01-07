@@ -70,18 +70,9 @@ export default {
             this.$inertia.visit(`/menu/${id}`);
         },
         // Menangani event delete user
-        handleDeleteMenu(userId) {
-            if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-                axios
-                    .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
-                    .then(() => {
-                        this.fetchUsers(); // Refresh data pengguna setelah penghapusan
-                        alert("Pengguna berhasil dihapus!");
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        alert("Gagal menghapus pengguna.");
-                    });
+        handleDeleteMenu(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus menu ini?")) {
+                this.$inertia.delete(`/menu/${id}/destroy`);
             }
         },
         handleAddMenu() {

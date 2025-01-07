@@ -155,8 +155,13 @@ class MenuController extends Controller
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
-        $menu->delete();
 
-        return redirect()->route('menu.index')->with('success', 'Menu deleted successfully.');
+        try {
+            $menu->delete();
+
+            return redirect()->route('menu')->with('success', 'Menu deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('menu')->with('error', 'Menu delete failed.');
+        }
     }
 }
