@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Itam;
 
+use App\Http\Controllers\Controller;
+use App\Models\Itam\Asset;
 use Illuminate\Http\Request;
 
-class ItamController extends Controller
+class AssetController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $test = Asset::get();
+        dd($test);
     }
 
     /**

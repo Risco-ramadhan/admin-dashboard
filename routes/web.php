@@ -10,7 +10,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\PermissionController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ItamController;
+use App\Http\Controllers\Itam\AssetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
 
     Route::prefix('itam')->group(function () {
-        Route::get('/', [ItamController::class, 'index'])->name('itam');
+        Route::get('/', [AssetController::class, 'index'])->name('itam');
     });
 });
 
