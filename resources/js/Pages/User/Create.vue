@@ -26,7 +26,7 @@
                     type="text"
                     class="form-control"
                     id="name"
-                    v-model="user.name"
+                    v-model="form.name"
                     placeholder="Enter user's name"
                     required
                   />
@@ -37,7 +37,7 @@
                     type="email"
                     class="form-control"
                     id="email"
-                    v-model="user.email"
+                    v-model="form.email"
                     placeholder="Enter user's email"
                     required
                   />
@@ -48,18 +48,21 @@
                     type="password"
                     class="form-control"
                     id="password"
-                    v-model="user.password"
+                    v-model="form.password"
                     placeholder="Enter a secure password"
                     required
                   />
                 </div>
                 <div class="mb-3">
                   <label for="roles" class="form-label">Roles</label>
-                  <select class="form-select" id="roles" v-model="user.roles" required>
-                    <option disabled value="">Select role</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                  </select>
+                  <v-select
+                    v-model="form.roles"
+                    :options="roles"
+                    label="name"
+                    :get-option-label="(option) => option.name"
+                    placeholder="Select roles"
+                    multiple
+                  />
                 </div>
                 <div class="d-flex justify-content-between">
                   <button type="button" class="btn btn-secondary" @click="goBack">
@@ -78,44 +81,106 @@
 
 <script>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import vSelect from "vue3-select";
 
 export default {
   name: "CreateUser",
   components: {
     MainLayout,
+    vSelect,
   },
   setup() {
-    const user = useForm({
+    const form = useForm({
       name: "",
       email: "",
       password: "",
-      roles: "",
+      roles: [],
     });
 
+    const { props } = usePage();
+    const roles = ref(props.roles || []);
+
     const handleCreateUser = () => {
-      user.post("/users", {
+      form.post("/user", {
         onSuccess: () => {
-          user.reset(); // Reset form after successful submission
+          form.reset();
         },
       });
     };
 
-    return {
-      user,
-      handleCreateUser,
+    const goBack = () => {
+      window.history.back();
     };
-  },
-  methods: {
-    goBack() {
-      this.$inertia.visit("/user");
-    },
+
+    return {
+      form,
+      handleCreateUser,
+      goBack,
+      roles,
+    };
   },
 };
 </script>
 
 <style scoped>
-/* Styling for a polished look */
+@import "vue3-select/dist/vue3-select.css";
+
+/* Custom styling for v-select dropdown */
+.v-select {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.v-select .dropdown-toggle {
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.v-select .dropdown-toggle:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.v-select .dropdown-menu {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1050;
+}
+
+.v-select .dropdown-item {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  color: #212529;
+}
+
+.v-select .dropdown-item:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #0056b3;
+}
+
+.v-select .dropdown-menu .dropdown-header {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #495057;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ced4da;
+}
+
+.v-select .dropdown-toggle:focus,
+.v-select .dropdown-item:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
 .card {
   border: none;
   padding: 15px;

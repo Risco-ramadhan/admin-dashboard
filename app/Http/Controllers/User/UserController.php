@@ -14,27 +14,21 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Ambil semua pengguna
-        $users = User::all();
+        $users = User::with('roles')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'roles' => $user->roles->pluck('name')->join(', '), // Gabungkan nama peran dengan koma
+                ];
+            });
 
-        // Buat array untuk menyimpan data pengguna beserta role-nya
-        $userWithRoles = [];
-
-        foreach ($users as $user) {
-            // Ambil nama role untuk setiap pengguna
-            $roles = $user->getRoleNames()->toArray(); // Mengubah role names menjadi array
-            $userWithRoles[] = [
-                'id' => $user->id,
-                'name' => $user->name, // Menyimpan nama pengguna
-                'email' => $user->email, // Menyimpan nama pengguna
-                'roles' => $roles // Menyimpan role pengguna
-            ];
-        }
-
-        // Menampilkan hasil
         $data = [
-            'users' => $userWithRoles
+            'users' => $users,
         ];
+
         return Inertia::render('User/Index', $data);
     }
 
@@ -51,7 +45,8 @@ class UserController extends Controller
     public function create()
     {
         // Ambil semua role yang tersedia
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'super admin')
+            ->get();
 
         // Menampilkan halaman create dengan data role
         return Inertia::render('User/Create', [
@@ -65,9 +60,9 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
             'roles' => 'required|array|min:1',
-            'roles.*' => 'exists:roles,name', // Pastikan role yang dipilih ada di tabel roles
+            // 'roles.*' => 'exists:roles,name', // Pastikan role yang dipilih ada di tabel roles
         ]);
 
         // Buat pengguna baru
@@ -77,8 +72,9 @@ class UserController extends Controller
             'password' => bcrypt($validated['password']),
         ]);
 
-        // Assign roles ke pengguna
-        $user->syncRoles($validated['roles']);
+        foreach ($validated['roles'] as $role) {
+            $user->assignRole($role['name']);
+        }
 
         // Redirect atau memberikan response
         return redirect()->route('user.index')->with('success', 'User created successfully.');
@@ -86,40 +82,62 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('roles')->findOrFail($id);
+        $user = User::with('roles')->findOrFail($id); // Load user with roles
         $roles = Role::all();
+
+        // Get selected roles as an array of IDs
+        $userRoles = $user->roles;
 
         return Inertia::render('User/Edit', [
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->roles->pluck('name')->toArray(),
+                'assigned_roles' => $userRoles, // Pass the role IDs to the frontend
             ],
-            'allRoles' => $roles->map(function ($role) {
-                return ['id' => $role->id, 'name' => $role->name];
+            'roles' => $roles->map(function ($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                ];
             }),
         ]);
     }
 
+
     public function update(Request $request, $id)
     {
+        // Validasi data yang diterima
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            // 'password' => 'nullable|string|min:8', // Password is optional for update
             'roles' => 'required|array|min:1',
-            'roles.*' => 'exists:roles,name',
+            // 'roles.*' => 'exists:roles,name', // Ensure selected roles exist in the roles table
         ]);
+
+        // Cari pengguna yang ingin diupdate
         $user = User::findOrFail($id);
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
 
-        $user->syncRoles($validated['roles']);
+        // Update data pengguna
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
 
+        $user->save();
+
+        $user->syncRoles([]);
+
+        foreach ($validated['roles'] as $value) {
+            // Find the role by ID
+            $role = Role::findOrFail($value['id']); // Ensure the role exists
+            // Assign the role to the user
+            $user->assignRole($role->name);
+        } // This ensures roles are synced correctly
+
+        // Redirect atau memberikan response
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
     }
+
 
 
     public function destroy($id)
@@ -127,33 +145,11 @@ class UserController extends Controller
         // Ambil pengguna berdasarkan ID
         $user = User::findOrFail($id);
 
+        $user->syncRoles([]);
         // Hapus pengguna
         $user->delete();
 
         // Redirect atau memberikan response
         return redirect()->route('user.index')->with('success', 'User deleted successfully.');
-    }
-
-    public function getDataUser()
-    {
-        // Ambil semua pengguna
-        $users = User::all();
-        // Buat array untuk menyimpan data pengguna beserta role-nya
-        $userWithRoles = [];
-
-        foreach ($users as $user) {
-            // Ambil nama role untuk setiap pengguna
-            $roles = $user->getRoleNames()->toArray(); // Mengubah role names menjadi array
-            $userWithRoles[] = [
-                'user' => $user->name, // Menyimpan nama pengguna
-                'email' => $user->email, // Menyimpan email pengguna
-                'roles' => $roles // Menyimpan role pengguna
-            ];
-        }
-
-        // Kembalikan data sebagai response JSON
-        return response()->json([
-            'users' => $userWithRoles
-        ]);
     }
 }

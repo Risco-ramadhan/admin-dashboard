@@ -19,6 +19,6 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/fetch', [DashboardController::class, 'countCardDashboard']);
 });
 
-Route::middleware('auth')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

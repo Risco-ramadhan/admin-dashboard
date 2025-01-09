@@ -42,9 +42,9 @@ class RoleController extends Controller
                 'guard_name' => 'web',
             ]);
 
-            return redirect()->route('role')->with('success', 'Role created successfully.');
+            return redirect()->route('role.index')->with('success', 'Role created successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('role')->with('error', 'Role create failed.');
+            return redirect()->route('role.index')->with('error', 'Role create failed.');
         }
     }
 
@@ -86,9 +86,9 @@ class RoleController extends Controller
                 $role->permissions()->sync($request->permissions);
             }
 
-            return redirect()->route('role')->with('success', 'Role updated successfully.');
+            return redirect()->route('role.index')->with('success', 'Role updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('role')->with('error', 'Role update failed: ' . $e->getMessage());
+            return redirect()->route('role.index')->with('error', 'Role update failed: ' . $e->getMessage());
         }
     }
 
@@ -101,9 +101,9 @@ class RoleController extends Controller
             $role->permissions()->detach();
             $role->delete();
 
-            return redirect()->route('role')->with('success', 'Role deleted successfully.');
+            return redirect()->route('role.index')->with('success', 'Role deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('role')->with('error', 'Role delete failed.');
+            return redirect()->route('role.index')->with('error', 'Role delete failed.');
         }
     }
 }

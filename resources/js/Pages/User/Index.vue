@@ -29,8 +29,8 @@
 
 <script>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import PaginatedTable from "@/Components/PaginatedTable.vue"; // Import komponen PaginatedTable
-import axios from "axios"; // Jika menggunakan axios untuk API
+import PaginatedTable from "@/Components/PaginatedTable.vue";
+import axios from "axios";
 
 export default {
   name: "UserIndex",
@@ -38,9 +38,11 @@ export default {
     MainLayout,
     PaginatedTable,
   },
+  props: {
+    users: Array, // Prop untuk menerima data pengguna dari Inertia
+  },
   data() {
     return {
-      users: [],
       columns: [
         { key: "name", label: "Name" },
         { key: "email", label: "Email" },
@@ -48,43 +50,19 @@ export default {
       ],
     };
   },
-  props: {
-    users: Array,
-  },
   methods: {
     handleAddUser() {
       this.$inertia.visit("/user/create");
     },
-
     handleEditUser(id) {
-      // Arahkan ke halaman edit atau tampilkan modal
-      console.log("Edit user:", id);
-      // Misalnya, arahkan ke halaman edit
-      this.$inertia.visit(`/users/${id}/edit`);
+      this.$inertia.visit(`/user/${id}/edit`);
     },
-
     handleShowUser(id) {
-      // Use $inertia.visit for navigation
-      this.$inertia.visit(`/users/${id}`); // Correct route path
+      this.$inertia.visit(`/user/${id}`);
     },
-
-    // Menangani event delete user
-    handleDeleteUser(userId) {
-      console.log(userId);
-      if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-        axios
-          .delete(`/api/users/${userId}`) // Sesuaikan dengan endpoint API Anda
-          .then(() => {
-            this.fetchUsers(); // Refresh data pengguna setelah penghapusan
-            alert("Pengguna berhasil dihapus!");
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("Gagal menghapus pengguna.");
-          });
-      }
+    handleDeleteUser(id) {
+      this.$inertia.delete(`/user/${id}`);
     },
   },
-  mounted() {},
 };
 </script>

@@ -8,78 +8,60 @@
         <li class="breadcrumb-item">
           <a href="/user" class="text-decoration-none">User</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Create</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
-    <div class="card my-3 shadow-lg rounded">
-      <div class="container py-4" v-if="user">
-        <h5 class="text-start fw-bold mb-4">Edit User</h5>
-        <div class="container">
-          <form @submit.prevent="handleSubmit">
-            <div class="row">
-              <!-- Username Input -->
-              <div class="col-md-6 mb-3">
-                <label for="user_name" class="form-label text-secondary">Username:</label>
-                <input
-                  type="text"
-                  id="user_name"
-                  class="form-control"
-                  v-model="user.name"
-                  placeholder="Enter username"
-                  required
-                />
-              </div>
-              <!-- Email Input -->
-              <div class="col-md-6 mb-3">
-                <label for="user_email" class="form-label text-secondary">Email:</label>
-                <input
-                  type="email"
-                  id="user_email"
-                  class="form-control"
-                  v-model="user.email"
-                  placeholder="Enter email"
-                  required
-                />
-              </div>
-              <!-- Role Selection -->
-              <div class="col-md-12 mb-3">
-                <label for="user_role" class="form-label text-secondary">Role:</label>
-                <select
-                  id="user_role"
-                  class="form-select"
-                  v-model="selectedRoles"
-                  required
-                >
-                  <option value="" disabled>Select role</option>
-                  <option v-for="role in allRoles" :key="role.name" :value="role.name">
-                    {{ role.name }}
-                  </option>
-                </select>
-              </div>
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card rounded shadow-lg">
+            <div class="card-header bg-primary text-white">
+              <h5 class="fw-bold mb-0 text-center">Edit User</h5>
             </div>
-            <!-- Action Buttons -->
-            <div class="d-flex justify-content-end mt-4">
-              <button class="btn btn-secondary me-2" type="button" @click="goBack">
-                <i class="bi bi-arrow-left"></i> Back
-              </button>
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Save Edits
-              </button>
+            <div class="card-body">
+              <form @submit.prevent="handleUpdateUser">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    v-model="form.name"
+                    placeholder="Enter user's name"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    v-model="form.email"
+                    placeholder="Enter user's email"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="roles" class="form-label">Roles</label>
+                  <v-select
+                    v-model="form.roles"
+                    :options="allRoles"
+                    label="name"
+                    :get-option-label="(option) => option.name"
+                    placeholder="Select roles"
+                    multiple
+                    track-by="id"
+                  />
+                </div>
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn btn-secondary" @click="goBack">
+                    Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </form>
             </div>
-          </form>
-        </div>
-      </div>
-      <!-- Loading State -->
-      <div v-else>
-        <div
-          class="d-flex justify-content-center align-items-center"
-          style="height: 200px"
-        >
-          <div class="text-center">
-            <div class="spinner-border text-primary mb-3" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="text-muted">Loading user details...</p>
           </div>
         </div>
       </div>
@@ -89,59 +71,45 @@
 
 <script>
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { ref } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import vSelect from "vue3-select";
 
 export default {
   name: "EditUser",
   components: {
     MainLayout,
+    vSelect,
   },
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
-    allRoles: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      selectedRoles: [], // Data untuk role yang dipilih
-    };
-  },
-  mounted() {
-    console.log("All Roles:", this.allRoles);
-    console.log("User Roles:", this.user.roles);
+  setup() {
+    const { props } = usePage();
+    const allRoles = ref(props.roles || []); // All available roles
 
-    if (this.user.roles) {
-      this.selectedRoles = [...this.user.roles];
-    }
-  },
-  methods: {
-    handleSubmit() {
-      // Kirim data yang diedit ke backend
-      this.$inertia.put(`/user/${this.user.id}`, {
-        name: this.user.name,
-        email: this.user.email,
-        roles: this.selectedRoles,
+    // Initialize form with the assigned_roles (which should be an array of selected role IDs)
+    const form = useForm({
+      name: props.user.name || "",
+      email: props.user.email || "",
+      roles: props.user.assigned_roles || [], // Initialize with assigned role IDs
+    });
+
+    const handleUpdateUser = () => {
+      form.put(`/user/${props.user.id}`, {
+        onSuccess: () => {
+          form.reset();
+        },
       });
-    },
-    goBack() {
-      this.$inertia.visit("/user");
-    },
+    };
+
+    const goBack = () => {
+      window.history.back();
+    };
+
+    return {
+      form,
+      handleUpdateUser,
+      goBack,
+      allRoles,
+    };
   },
 };
 </script>
-
-<style scoped>
-/* Responsif untuk perangkat kecil */
-@media (max-width: 768px) {
-  .form-label {
-    font-size: 0.9rem;
-  }
-  .btn {
-    font-size: 0.9rem;
-  }
-}
-</style>

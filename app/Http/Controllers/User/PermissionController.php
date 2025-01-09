@@ -44,9 +44,9 @@ class PermissionController extends Controller
                 'name' => $request->name
             ]);
 
-            return redirect()->route('permission')->with('success', 'Permission created successfully.');
+            return redirect()->route('permission.index')->with('success', 'Permission created successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('permission')->with('error', 'Permission create failed.');
+            return redirect()->route('permission.index')->with('error', 'Permission create failed.');
         }
     }
 
@@ -85,9 +85,9 @@ class PermissionController extends Controller
         try {
             $permission->update($request->only('name'));
 
-            return redirect()->route('permission')->with('success', 'Permission updated successfully.');
+            return redirect()->route('permission.index')->with('success', 'Permission updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('permission')->with('error', 'Permission update failed.');
+            return redirect()->route('permission.index')->with('error', 'Permission update failed.');
         }
     }
 
@@ -101,9 +101,9 @@ class PermissionController extends Controller
         try {
             $permission->delete();
 
-            return redirect()->route('permission')->with('success', 'Permission deleted successfully.');
+            return redirect()->route('permission.index')->with('success', 'Permission deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('permission')->with('error', 'Permission delete failed.');
+            return redirect()->route('permission.index')->with('error', 'Permission delete failed.');
         }
     }
 }

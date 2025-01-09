@@ -8,9 +8,10 @@ use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\PermissionController;
-use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Itam\AssetController;
+use App\Http\Controllers\Itam\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,55 +32,23 @@ Route::get('/', [AuthenticatedSessionController::class, 'create'])
     ->name('login');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/user', [UserController::class, 'index'])->name('user');
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('user.view');
-    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/users', [UserController::class, 'store'])->name('user.store');
-    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('user.update');
-    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/dashboard', [Controller::class, 'index'])->name('dashboard');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
-    Route::get('/role', [RoleController::class, 'index'])->name('role');
-    Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
-    Route::post('/role', [RoleController::class, 'store'])->name('role.store');
-    Route::get('/role/{id}', [RoleController::class, 'show'])->name('role.view');
-    Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
-    Route::put('/role/{id}', [RoleController::class, 'update'])->name('role.update');
-    Route::delete('/role/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::resource('user', UserController::class);
 
-    Route::get('/menu', [MenuController::class, 'index'])->name('menu');
-    Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
-    Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store');
-    Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.view');
-    Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
-    Route::put('/menu/{id}/update', [MenuController::class, 'update'])->name('menu.update');
-    Route::delete('/menu/{id}/destroy', [MenuController::class, 'destroy'])->name('menu.destroy');
+    Route::resource('role', RoleController::class);
 
-    Route::get('/permission', [PermissionController::class, 'index'])->name('permission');
-    Route::get('/permission/create', [PermissionController::class, 'create'])->name('permission.create');
-    Route::post('/permission', [PermissionController::class, 'store'])->name('permission.store');
-    Route::get('/permission/{id}', [PermissionController::class, 'show'])->name('permission.view');
-    Route::get('/permission/{id}/edit', [PermissionController::class, 'edit'])->name('permission.edit');
-    Route::put('/permission/{id}', [PermissionController::class, 'update'])->name('permission.update');
-    Route::delete('/permission/{id}', [PermissionController::class, 'destroy'])->name('permission.destroy');
+    Route::resource('menu', MenuController::class);
+
+    Route::resource('permission', PermissionController::class);
 
     Route::prefix('itam')->group(function () {
-        Route::get('/', [AssetController::class, 'index'])->name('itam');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('itam.dashboard');
     });
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::resource('risco', ProfileController::class);
 
-Route::get('master', function () {
-    return '<h1>Hello admin </h1>';
-})->middleware(['auth', 'verified', 'permission:lihat-user'])->name('master');
 
 
 
