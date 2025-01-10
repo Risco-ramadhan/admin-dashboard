@@ -2,8 +2,11 @@
   <MainLayout>
     <div class="container mt-4">
       <div class="row g-4 pt-3">
-        <!-- Card 1: Today's Money -->
-        <div class="col-md-3" v-for="(data, key) in summaryCards" :key="key">
+        <div
+          class="col-12 col-sm-6 col-md-3"
+          v-for="(data, key) in summaryCards"
+          :key="key"
+        >
           <div class="card p-3 shadow-sm border-0 shadow-lg">
             <div class="d-flex justify-content-between align-items-center">
               <div>
@@ -22,10 +25,27 @@
       </div>
     </div>
 
-    <div class="card mt-5">
+    <!-- Button Nav Links -->
+    <div class="d-flex justify-content-start my-4">
+      <button
+        v-for="(tab, index) in tabs"
+        :key="index"
+        class="btn me-2"
+        :class="{
+          'btn-primary': activeTab === tab.id,
+          'btn-outline-primary': activeTab !== tab.id,
+        }"
+        @click="activeTab = tab.id"
+      >
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <div class="card mt-2" v-if="activeTab === 'alerts'">
       <div class="container my-4">
         <h5 class="fw-bold mb-3">Detail Monitoring License < 60 Days</h5>
         <hr />
+
         <div class="table-responsive">
           <table class="table align-middle">
             <thead>
@@ -90,6 +110,20 @@
         </nav>
       </div>
     </div>
+
+    <div class="card mt-2" v-if="activeTab === 'allData'">
+      <div class="container my-4">
+        <h5 class="fw-bold mb-3">All Data</h5>
+        <hr />
+      </div>
+    </div>
+
+    <div class="card mt-2" v-if="activeTab === 'charts'">
+      <div class="container my-4">
+        <h5 class="fw-bold mb-3">Charts</h5>
+        <hr />
+      </div>
+    </div>
   </MainLayout>
 </template>
 
@@ -107,6 +141,12 @@ export default {
       currentPage: 1,
       itemsPerPage: 5,
       intervalId: null,
+      activeTab: "alerts",
+      tabs: [
+        { id: "alerts", label: "Alerts" },
+        { id: "allData", label: "All Data" },
+        { id: "charts", label: "Charts" },
+      ],
       summaryCards: [
         {
           label: "CUSTOMER",
@@ -198,6 +238,7 @@ export default {
 <style scoped>
 .card {
   border-radius: 12px;
+  transition: transform 0.2s ease-in-out;
 }
 
 .rounded-circle {
@@ -206,6 +247,29 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .card {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .rounded-circle {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+  }
+
+  .card p,
+  .card h4,
+  .card small {
+    text-align: center;
+  }
+}
+
+.btn {
+  border-radius: 12px;
 }
 
 .table-danger {
