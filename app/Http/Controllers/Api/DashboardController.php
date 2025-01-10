@@ -15,25 +15,49 @@ class DashboardController extends Controller
     public function countCardDashboard()
     {
         $customers = [
-            'customer_count' => Contract::count(),
+            'customer_count' => Contract::whereNull('deleted_at')
+                ->count(),
             'customer_created' => optional(Contract::orderBy('created_at', 'desc')->first())->created_at
         ];
 
         $assets = [
-            'asset_count' => Asset::count(),
+            'asset_count' => Asset::whereNull('deleted_at')
+                // ->groupBy('_snipeit_functionality_37')
+                ->count(),
             'asset_created' => optional(Asset::orderBy('created_at', 'desc')->first())->created_at
         ];
 
         $licenses = [
-            'license_count' => License::count(),
+            'license_count' => License::whereNull('deleted_at')
+                ->count(),
             'license_created' => optional(License::orderBy('created_at', 'desc')->first())->created_at
         ];
 
         $contractVendor = [
-            'contract_vendor_count' => ContractVendor::count(),
+            'contract_vendor_count' => ContractVendor::whereNull('deleted_at')
+                ->count(),
             'contract_vendor_created' => optional(ContractVendor::orderBy('created_at', 'desc')->first())->created_at
         ];
 
+        $data = [
+            'customer_count' => $customers['customer_count'],
+            'customer_created' => $customers['customer_created'] ? $customers['customer_created']->diffForHumans() : null,
+            'asset_count' => $assets['asset_count'],
+            'asset_created' => $assets['asset_created'] ? $assets['asset_created']->diffForHumans() : null,
+            'license_count' => $licenses['license_count'],
+            'license_created' => $licenses['license_created'] ? $licenses['license_created']->diffForHumans() : null,
+            'contract_vendor_count' => $contractVendor['contract_vendor_count'],
+            'contract_vendor_created' => $contractVendor['contract_vendor_created'] ? $contractVendor['contract_vendor_created']->diffForHumans() : null,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'render' => $data
+        ]);
+    }
+
+    public function getLicense()
+    {
         $licensesTable = License::query()
             ->with(['company', 'category', 'manufacturer', 'seats'])
             ->select([
@@ -46,17 +70,17 @@ class DashboardController extends Controller
                 'categories.name as Categories__name',
                 'manufacturers.name as Manufacturers__name',
                 DB::raw("
-                licenses.seats - (
-                    SELECT COUNT(*)
-                    FROM license_seats
-                    WHERE license_seats.license_id = licenses.id
-                        AND (
-                            (license_seats.assigned_to IS NOT NULL AND license_seats.asset_id IS NULL)
-                            OR (license_seats.assigned_to IS NULL AND license_seats.asset_id IS NOT NULL)
-                            OR (license_seats.assigned_to IS NOT NULL AND license_seats.asset_id IS NOT NULL)
-                        )
-                ) AS sisa_license
-            ")
+            licenses.seats - (
+                SELECT COUNT(*)
+                FROM license_seats
+                WHERE license_seats.license_id = licenses.id
+                    AND (
+                        (license_seats.assigned_to IS NOT NULL AND license_seats.asset_id IS NULL)
+                        OR (license_seats.assigned_to IS NULL AND license_seats.asset_id IS NOT NULL)
+                        OR (license_seats.assigned_to IS NOT NULL AND license_seats.asset_id IS NOT NULL)
+                    )
+            ) AS sisa_license
+        ")
             ])
             ->leftJoin('companies', 'licenses.company_id', '=', 'companies.id')
             ->leftJoin('categories', 'licenses.category_id', '=', 'categories.id')
@@ -85,14 +109,6 @@ class DashboardController extends Controller
         });
 
         $data = [
-            'customer_count' => $customers['customer_count'],
-            'customer_created' => $customers['customer_created'] ? $customers['customer_created']->diffForHumans() : null,
-            'asset_count' => $assets['asset_count'],
-            'asset_created' => $assets['asset_created'] ? $assets['asset_created']->diffForHumans() : null,
-            'license_count' => $licenses['license_count'],
-            'license_created' => $licenses['license_created'] ? $licenses['license_created']->diffForHumans() : null,
-            'contract_vendor_count' => $contractVendor['contract_vendor_count'],
-            'contract_vendor_created' => $contractVendor['contract_vendor_created'] ? $contractVendor['contract_vendor_created']->diffForHumans() : null,
             'license_table' => $formattedData
         ];
 

@@ -3,7 +3,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="/dashboard" class="text-decoration-none">Home</a>
+          <a href="/dashboard" class="text-decoration-none">User</a>
         </li>
         <li class="breadcrumb-item">
           <a href="/user" class="text-decoration-none">User</a>

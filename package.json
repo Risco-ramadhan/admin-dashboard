@@ -18,7 +18,10 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@highcharts/map-collection": "^2.3.0",
         "devextreme-cli": "^1.7.3",
+        "highcharts": "^12.1.2",
+        "highcharts-vue": "^2.0.1",
         "vue3-select": "^0.1.2"
     }
 }

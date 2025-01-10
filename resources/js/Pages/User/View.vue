@@ -1,6 +1,17 @@
 <template>
-  <MainLayout>
-    <div class="card my-5 shadow-lg rounded">
+  <MainLayout
+    ><nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/dashboard" class="text-decoration-none">User</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/menu" class="text-decoration-none">Menu</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Show</li>
+      </ol>
+    </nav>
+    <div class="card my-3 shadow-lg rounded">
       <div class="container" v-if="user">
         <span class="text-start h5 fw-bold mb-5">User Details</span>
         <div class="row pt-3">
