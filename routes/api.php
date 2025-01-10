@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('dashboard')->group(function () {
-    Route::get('/fetch', [DashboardController::class, 'countCardDashboard']);
+Route::prefix('itam')->group(function () {
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/fetch', [DashboardController::class, 'countCardDashboard']);
+    });
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

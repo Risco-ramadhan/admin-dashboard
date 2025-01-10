@@ -159,7 +159,7 @@ export default {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/dashboard/fetch`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/itam/dashboard/fetch`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

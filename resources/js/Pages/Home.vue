@@ -3,8 +3,10 @@
     <div class="container mt-5">
       <!-- Informasi User -->
       <div class="user-info text-center mb-4">
-        <h4>Welcome, John Doe</h4>
-        <p>Your account: john.doe@example.com</p>
+        <h3>
+          Welcome, {{ greeting }} <b>{{ user.name }}</b>
+        </h3>
+        <p>Your account: {{ user.email }}</p>
       </div>
 
       <!-- Card Navigation -->
@@ -52,6 +54,15 @@ export default {
   name: "NavCardTemplate",
   components: {
     MainLayout,
+  },
+
+  props: {
+    user: Object,
+    greeting: String,
+  },
+
+  mounted() {
+    console.log(this.greeting);
   },
 };
 </script>
