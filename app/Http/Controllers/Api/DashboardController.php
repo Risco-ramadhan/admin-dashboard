@@ -39,6 +39,25 @@ class DashboardController extends Controller
             'contract_vendor_created' => optional(ContractVendor::orderBy('created_at', 'desc')->first())->created_at
         ];
 
+        $chart = [
+            [
+                'name' => 'CUSTOMER',
+                'y' => $customers['customer_count']
+            ],
+            [
+                'name' => 'ASSET',
+                'y' => $assets['asset_count']
+            ],
+            [
+                'name' => 'LICENSE',
+                'y' => $licenses['license_count']
+            ],
+            [
+                'name' => 'CONTRACT VENDOR',
+                'y' => $contractVendor['contract_vendor_count']
+            ]
+        ];
+
         $data = [
             'customer_count' => $customers['customer_count'],
             'customer_created' => $customers['customer_created'] ? $customers['customer_created']->diffForHumans() : null,
@@ -48,6 +67,15 @@ class DashboardController extends Controller
             'license_created' => $licenses['license_created'] ? $licenses['license_created']->diffForHumans() : null,
             'contract_vendor_count' => $contractVendor['contract_vendor_count'],
             'contract_vendor_created' => $contractVendor['contract_vendor_created'] ? $contractVendor['contract_vendor_created']->diffForHumans() : null,
+            'charts' => [
+                'chart' => ($chart),
+                'colors' => [
+                    '#FF4757',  // Bright red (merah cerah)
+                    '#00BFFF',   // Deep sky blue (terang biru)
+                    '#FFBF00',  // Vivid amber (terang kuning keemasan)
+                    '#32CD32',  // Lime green (terang hijau)
+                ]
+            ]
         ];
 
         return response()->json([
