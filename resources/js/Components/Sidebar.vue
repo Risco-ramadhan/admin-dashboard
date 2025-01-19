@@ -24,6 +24,12 @@
           <span v-if="!collapsed">Home</span>
         </li>
       </a>
+      <a :href="route('itam.dashboard')">
+        <li class="nav-item">
+          <i class="bi bi-option me-2"></i>
+          <span v-if="!collapsed">Seat Management</span>
+        </li>
+      </a>
       <li class="nav-item">
         <a
           href="#"
