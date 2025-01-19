@@ -20,6 +20,8 @@ Route::prefix('itam')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/fetch', [DashboardController::class, 'countCardDashboard']);
         Route::get('/get-lisence', [DashboardController::class, 'getLicense']);
+        Route::get('/get-charts', [DashboardController::class, 'getChart']);
+        Route::get('/detail-summary-cards/{request}', [DashboardController::class, 'detailSummaryCards'])->name('dashboard-detail-summary');
     });
 });
 // });
