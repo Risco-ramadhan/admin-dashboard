@@ -184,6 +184,7 @@ class DashboardController extends Controller
 
         return response()->json([
             'success' => true,
+            'type' => $type,
             'render' => $data,
         ]);
     }
