@@ -1,5 +1,15 @@
 <template>
   <MainLayout>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a :href="route('itam.dashboard')" class="text-decoration-none"
+            >Seat Management</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page"></li>
+      </ol>
+    </nav>
     <div class="container mt-4">
       <div class="row g-4 pt-3">
         <!-- Summary Cards -->

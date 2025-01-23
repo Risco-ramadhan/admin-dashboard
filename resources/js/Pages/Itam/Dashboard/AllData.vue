@@ -10,7 +10,7 @@
     </div>
 
     <!-- Table displaying the data -->
-    <!-- <div v-else>
+    <div v-else>
       <table class="table table-bordered table-hover mt-3">
         <thead>
           <tr>
@@ -24,7 +24,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, index) in data" :key="index">
+          <!-- <tr v-for="(row, index) in data" :key="index">
             <td>{{ row.company_name }}</td>
             <td>{{ row.license_name }}</td>
             <td>{{ row.days_remaining }}</td>
@@ -32,10 +32,10 @@
             <td>{{ row.category_name }}</td>
             <td>{{ row.seats }}</td>
             <td>{{ row.remaining_seats }}</td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
-    </div> -->
+    </div>
   </div>
 </template>
 
