@@ -1,81 +1,66 @@
 <template>
   <MainLayout>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
+    <nav aria-label="breadcrumb" class="bg-light p-2 rounded">
+      <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
           <a :href="route('itam.dashboard')" class="text-decoration-none"
             >Seat Management</a
           >
         </li>
-        <li class="breadcrumb-item active" aria-current="page"></li>
+        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
       </ol>
     </nav>
     <div class="container mt-4">
-      <div class="row g-4 pt-3">
-        <!-- Summary Cards -->
+      <!-- Summary Cards -->
+      <div class="row g-4">
         <div
-          class="col-12 col-sm-6 col-md-3"
+          class="col-12 col-md-6 col-lg-3"
           v-for="(data, key) in summaryCards"
           :key="key"
         >
-          <!-- Wrap the card with <a> or add @click -->
-          <a
-            href="#"
-            @click.prevent="showAllData(data.type)"
-            class="card-link text-decoration-none"
-          >
-            <div
-              class="card p-3 shadow-lg border-0 rounded-3 transition-all ease-in-out transform hover:shadow-2xl hover:scale-105"
-            >
-              <div class="d-flex justify-content-between align-items-center">
+          <a href="#" @click.prevent="showAllData(data.type)" class="card-link">
+            <div class="card shadow border-0 rounded-3">
+              <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                  <p class="text-muted mb-1 fw-semibold">
-                    {{ data.label }}
-                  </p>
-                  <h4 class="fw-bold">
-                    {{ data.count ?? "Loading..." }}
-                  </h4>
+                  <p class="text-muted mb-1 fw-semibold">{{ data.label }}</p>
+                  <h4 class="fw-bold">{{ data.count ?? "Loading..." }}</h4>
                   <small class="text-muted">{{ data.created ?? "Loading..." }}</small>
                 </div>
-                <div :class="`rounded-circle ${data.colorClass} p-3`">
-                  <i :class="`${data.icon} text-white`" style="font-size: 1.5rem"></i>
+                <div :class="`icon-container ${data.colorClass}`">
+                  <i :class="data.icon"></i>
                 </div>
               </div>
             </div>
           </a>
         </div>
       </div>
-    </div>
 
-    <!-- Button Nav Links -->
-    <div class="d-flex justify-content-start my-4">
-      <button
-        v-for="(tab, index) in tabs"
-        :key="index"
-        class="btn btn-sm me-2"
-        :class="{
-          'btn-primary': activeTab === tab.id,
-          'btn-outline-primary': activeTab !== tab.id,
-        }"
-        @click="activeTab = tab.id"
-      >
-        {{ tab.label }}
-      </button>
-    </div>
+      <!-- Tab Navigation -->
+      <div class="tabs-container d-flex justify-content-start my-4">
+        <button
+          v-for="(tab, index) in tabs"
+          :key="index"
+          class="btn btn-sm me-2"
+          :class="{
+            'btn-primary': activeTab === tab.id,
+            'btn-outline-primary': activeTab !== tab.id,
+          }"
+          @click="setActiveTab(tab.id)"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
 
-    <!-- Alerts Tab -->
-    <div v-if="activeTab === 'alerts'" class="card mt-2">
-      <Alerts />
-    </div>
-
-    <!-- All Data Tab -->
-    <div v-if="activeTab === 'allData'" class="card mt-2">
-      <AllData :type="selectedType" />
-    </div>
-
-    <!-- Charts Tab -->
-    <div v-if="activeTab === 'charts'" class="card mt-2">
-      <Charts />
+      <!-- Tab Content -->
+      <div v-if="activeTab === 'alerts'" class="card p-3">
+        <Alerts />
+      </div>
+      <div v-if="activeTab === 'allData'" class="card p-3">
+        <AllData :type="selectedType" />
+      </div>
+      <div v-if="activeTab === 'charts'" class="card p-3">
+        <Charts />
+      </div>
     </div>
   </MainLayout>
 </template>
@@ -94,11 +79,10 @@ export default {
     AllData,
     Charts,
   },
-
   data() {
     return {
       activeTab: "alerts",
-      selectedType: null, // Untuk melacak tipe yang dipilih
+      selectedType: null,
       summaryCards: [
         {
           label: "CUSTOMER",
@@ -109,7 +93,7 @@ export default {
           type: "customer",
         },
         {
-          label: "ASET",
+          label: "ASSET",
           count: null,
           created: null,
           icon: "fas fa-shopping-basket",
@@ -140,107 +124,94 @@ export default {
       ],
     };
   },
-
   methods: {
-    async fetch() {
+    async fetchDashboardData() {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/itam/dashboard/fetch`
         );
-
-        if (!response.data.success) {
-          throw new Error("API responded with success: false");
+        if (response.data.success) {
+          const { render } = response.data;
+          const cardKeys = ["customer", "asset", "license", "contract_vendor"];
+          this.summaryCards.forEach((card, index) => {
+            card.count = render[`${cardKeys[index]}_count`] ?? "N/A";
+            card.created = render[`${cardKeys[index]}_created`] ?? "Unknown";
+          });
+        } else {
+          console.warn("API responded with success: false");
         }
-
-        const { render } = response.data;
-        const cardKeys = ["customer", "asset", "license", "contract_vendor"];
-        this.summaryCards.forEach((card, index) => {
-          card.count = render[`${cardKeys[index]}_count`] ?? "N/A";
-          card.created = render[`${cardKeys[index]}_created`] ?? "Unknown";
-        });
       } catch (error) {
         console.error("Data fetching error:", error.message);
       }
     },
-
     showAllData(type) {
-      this.selectedType = type; // Set the selected type
-      this.activeTab = "allData"; // Switch to the "All Data" tab
+      this.selectedType = type;
+      this.activeTab = "allData";
+    },
+    setActiveTab(tabId) {
+      this.activeTab = tabId;
     },
   },
-
   mounted() {
-    this.fetch();
-    this.intervalId = setInterval(this.fetch, 300000);
+    this.fetchDashboardData();
+    this.intervalId = setInterval(this.fetchDashboardData, 300000);
   },
 };
 </script>
 
-<style>
-/* Add this custom CSS if you're not using a framework like Tailwind */
+<style scoped>
+.container {
+  padding: 15px;
+}
 
 .card {
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.12);
   transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.card-body {
-  padding: 1.25rem;
-}
-
-.card-link {
-  color: inherit;
-  text-decoration: none;
-}
-.card-link:hover .card {
-  transform: scale(1.05);
-  box-shadow: 0 12px 15px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.fw-bold {
-  font-weight: 700;
-}
-
-.fw-semibold {
-  font-weight: 600;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-button {
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-  background-color: #0d6efd !important;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.card .rounded-circle {
-  width: 60px; /* Make sure width and height are the same */
-  height: 60px; /* Ensure the container is square */
+.icon-container {
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%; /* This ensures the container is circular */
-  overflow: hidden; /* Prevents the icon from overflowing */
+  border-radius: 50%;
 }
 
-.card .rounded-circle i {
-  font-size: 1.5rem; /* Adjust icon size */
-  color: white; /* Ensure icon has color for visibility */
+.card .icon-container i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.tabs-container button {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.tabs-container button:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .icon-container {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-container i {
+    font-size: 1.25rem;
+  }
 }
 </style>
